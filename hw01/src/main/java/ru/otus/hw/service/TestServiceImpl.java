@@ -13,7 +13,7 @@ public class TestServiceImpl implements TestService {
     public void executeTest() {
         ioService.printLine("");
         ioService.printFormattedLine("Please answer the questions below%n");
-        // todo Получить вопросы из дао и вывести их с вариантами ответов
+        // todo [DONE] Получить вопросы из дао и вывести их с вариантами ответов
         ioService.printLine(questionDao.findAll().toString());
     }
 }

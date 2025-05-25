@@ -7,6 +7,7 @@ import com.opencsv.bean.*;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import ru.otus.hw.config.TestFileNameProvider;
+import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
@@ -28,29 +29,53 @@ public class CsvQuestionDao implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-
-        // todo Использовать CsvToBean
+        // todo [DONE] Использовать CsvToBean
         //  https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
+
+        // todo [DONE] Использовать QuestionReadException
+
         FileResourcesUtils utils = new FileResourcesUtils();
-        CSVReader c = new CSVReaderBuilder(new InputStreamReader(utils.getFileFromResourceAsStream(fileNameProvider.getTestFileName())))
-                .withCSVParser(new CSVParserBuilder()
-                        .withSeparator(';')
-                        .build())
-                .withSkipLines(1)
+        CSVReader csvReader;
+        try {
+            // Готовим ридер
+            csvReader = new CSVReaderBuilder(new InputStreamReader(utils.getFileFromResourceAsStream(fileNameProvider.getTestFileName())))
+                    .withCSVParser(new CSVParserBuilder()
+                            .withSeparator(';')
+                            .build())
+                    .withSkipLines(1)
+                    .build();
+        } catch (IllegalArgumentException e) {
+            throw new QuestionReadException("Could not find questions' file with name " + fileNameProvider.getTestFileName(), e);
+        }
+
+        // Готовим стратегию
+        MappingStrategy<QuestionDto> mappingStrategy = new ColumnPositionMappingStrategy<>();
+        mappingStrategy.setType(QuestionDto.class);
+
+        // Готовим CvToBean
+        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(csvReader)
+                .withType(QuestionDto.class)
+                .withMappingStrategy(mappingStrategy)
                 .build();
 
-        CsvToBean<Question> csvToBean = new CsvToBeanBuilder(c).withType(Question.class).withMappingStrategy(new M)build();
-
-        List<Question> questionList;
+        List<QuestionDto> questionList;
 
 
         questionList = csvToBean.parse();
 
-        // todo Использовать QuestionReadException
-            //  Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
 
-            // todo убрать хардкод
+        // todo [DONE]: перевести QuestionDto в Question
+        List<Question> questions = new ArrayList<>();
+        for (QuestionDto questionDto : questionList) {
+            Question question = questionDto.toDomainObject();
+            questions.add(question);
+        }
 
-        return List.of(new Question("Как дела?", List.of(new Answer("Супер", true))));
+
+        //  todo [DONE]: Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
+
+
+        // todo [DONE]: убрать хардкод
+        return questions;
     }
 }
