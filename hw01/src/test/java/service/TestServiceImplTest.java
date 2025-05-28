@@ -1,11 +1,13 @@
 package service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
-import ru.otus.hw.service.TestService;
+import ru.otus.hw.service.IOService;
 import org.mockito.*;
 import ru.otus.hw.service.TestServiceImpl;
 
@@ -19,8 +21,16 @@ public class TestServiceImplTest  {
     @Mock
     QuestionDao questionDao;
 
+    @Mock
+    IOService ioService;
+
     @InjectMocks
     TestServiceImpl testServiceImpl;
+
+    @BeforeEach
+    public void initializeMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void shouldPrintReceivedQuestions() {
@@ -34,7 +44,7 @@ public class TestServiceImplTest  {
 
         testServiceImpl.executeTest();
 
-//        verify(testServiceImpl).
+        verify(ioService).printLine(questions.toString());
     }
 
 }
