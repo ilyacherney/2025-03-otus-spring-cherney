@@ -3,79 +3,68 @@ package ru.otus.hw.dao;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import com.opencsv.bean.*;
-import com.opencsv.exceptions.CsvException;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.MappingStrategy;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
 import lombok.RequiredArgsConstructor;
-import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.dao.dto.QuestionDto;
-import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
-import ru.otus.hw.util.FileResourcesUtils;
+import ru.otus.hw.service.TestDataProvider;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
-    private final TestFileNameProvider fileNameProvider;
 
-    @CsvBindAndSplitByName(elementType = Question.class)
-    private List<Question> questions;
+    private final TestDataProvider testDataProvider;
 
     @Override
     public List<Question> findAll() {
-        // todo [DONE] Использовать CsvToBean
-        //  https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
+        CsvToBean csvToBean = getCsvToBean();
+        List<QuestionDto> questionDtoList = csvToBean.parse();
+        List<Question> questions = convertFromQuestionDtoList(questionDtoList);
+        return questions;
+    }
 
-        // todo [DONE] Использовать QuestionReadException
-
-        FileResourcesUtils utils = new FileResourcesUtils();
+    private CSVReader getCsvReader() {
         CSVReader csvReader;
         try {
-            // Готовим ридер
-            csvReader = new CSVReaderBuilder(new InputStreamReader(utils.getFileFromResourceAsStream(fileNameProvider.getTestFileName())))
+            csvReader = new CSVReaderBuilder(new InputStreamReader(testDataProvider.provideTestData()))
                     .withCSVParser(new CSVParserBuilder()
                             .withSeparator(';')
                             .build())
                     .withSkipLines(1)
                     .build();
         } catch (IllegalArgumentException e) {
-            throw new QuestionReadException("Could not find questions' file with name " + fileNameProvider.getTestFileName(), e);
+            throw new QuestionReadException("Could not find questions' file: " , e);
         }
+        return csvReader;
+    }
 
-        // Готовим стратегию
+    private MappingStrategy<QuestionDto> getMappingStrategy() {
         MappingStrategy<QuestionDto> mappingStrategy = new ColumnPositionMappingStrategy<>();
         mappingStrategy.setType(QuestionDto.class);
+        return mappingStrategy;
+    }
 
-        // Готовим CvToBean
-        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(csvReader)
+    private CsvToBean getCsvToBean() {
+        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(getCsvReader())
                 .withType(QuestionDto.class)
-                .withMappingStrategy(mappingStrategy)
+                .withMappingStrategy(getMappingStrategy())
                 .build();
+        return csvToBean;
+    }
 
-        List<QuestionDto> questionList;
-
-
-        questionList = csvToBean.parse();
-
-
-        // todo [DONE]: перевести QuestionDto в Question
+    private List<Question> convertFromQuestionDtoList(List<QuestionDto> questionDtoList) {
         List<Question> questions = new ArrayList<>();
-        for (QuestionDto questionDto : questionList) {
+        for (QuestionDto questionDto : questionDtoList) {
             Question question = questionDto.toDomainObject();
             questions.add(question);
         }
-
-
-        //  todo [DONE]: Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
-
-
-        // todo [DONE]: убрать хардкод
         return questions;
     }
 }

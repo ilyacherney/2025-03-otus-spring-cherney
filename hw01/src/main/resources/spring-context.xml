@@ -34,6 +34,12 @@
 
     <bean id="questionDao" class="ru.otus.hw.dao.CsvQuestionDao">
         <constructor-arg index="0">
+            <ref bean="testDataProvider"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="testDataProvider" class="ru.otus.hw.service.ResourcesTestDataProvider">
+        <constructor-arg index="0">
             <ref bean="testFileNameProvider"/>
         </constructor-arg>
     </bean>
