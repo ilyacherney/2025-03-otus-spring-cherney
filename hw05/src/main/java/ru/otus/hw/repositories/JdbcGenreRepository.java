@@ -1,49 +1,55 @@
 package ru.otus.hw.repositories;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Genre;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class JdbcGenreRepository implements GenreRepository {
 
-    // todo [ ] genre repo findAll():
+    private final NamedParameterJdbcOperations jdbc;
+
+    public JdbcGenreRepository(NamedParameterJdbcOperations jdbc) {
+        this.jdbc = jdbc;
+    }
+
+    // todo [x]: genre repo findAll():
     @Override
     public List<Genre> findAll() {
-        List<Genre> genres = new ArrayList<>();
-
-        try {
-            Class.forName("org.h2.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:h2", "sa", "");
-            System.out.println(conn);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        return genres;
+        return jdbc.query("select id, name from genres", new GenreRowMapper());
     }
 
+    // todo [x]: genre repo findById():
     @Override
     public Optional<Genre> findById(long id) {
-        return Optional.empty();
+        Map<String, Object> params = Collections.singletonMap("id", id);
+        Optional<Genre> genreOptional;
+
+        try {
+            genreOptional = Optional.of(jdbc.queryForObject("select id, name from genres where id = :id", params, new GenreRowMapper()));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+
+        return genreOptional;
     }
 
-    private static class GnreRowMapper implements RowMapper<Genre> {
+    // todo [x]: genre repo RowMapper
+    private static class GenreRowMapper implements RowMapper<Genre> {
 
         @Override
         public Genre mapRow(ResultSet rs, int i) throws SQLException {
-            // todo [ ]:
-            return null;
+            long id = rs.getLong("id");
+            String name = rs.getString("name");
+            return new Genre(id, name);
         }
+
     }
+
 }
