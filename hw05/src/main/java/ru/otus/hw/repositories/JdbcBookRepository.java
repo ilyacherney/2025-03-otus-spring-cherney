@@ -34,22 +34,22 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        //...
+        // todo: ...
     }
 
     private Book insert(Book book) {
         var keyHolder = new GeneratedKeyHolder();
 
-        //...
+        // todo: ...
 
-        //noinspection DataFlowIssue
+        // todo: noinspection DataFlowIssue
         book.setId(keyHolder.getKeyAs(Long.class));
         return book;
     }
 
     private Book update(Book book) {
-        //...
-        // Выбросить EntityNotFoundException если не обновлено ни одной записи в БД
+        // todo: ...
+        // todo: Выбросить EntityNotFoundException если не обновлено ни одной записи в БД
         return book;
     }
 
