@@ -18,6 +18,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Ñheckstyle
+        run: mvn checkstyle:check
+
       - name: Build application
         run: |
           mvn verify --no-transfer-progress
