@@ -13,6 +13,7 @@ import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
 import ru.otus.hw.service.TestDataProvider;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,8 @@ public class CsvQuestionDao implements QuestionDao {
 
     private CSVReader getCsvReader() {
         CSVReader csvReader;
-        try {
-            csvReader = new CSVReaderBuilder(new InputStreamReader(testDataProvider.provideTestData()))
+        try (InputStreamReader inputStreamReader = new InputStreamReader(testDataProvider.provideTestData())){
+            csvReader = new CSVReaderBuilder(inputStreamReader)
                     .withCSVParser(new CSVParserBuilder()
                             .withSeparator(';')
                             .build())
@@ -41,6 +42,8 @@ public class CsvQuestionDao implements QuestionDao {
                     .build();
         } catch (IllegalArgumentException e) {
             throw new QuestionReadException("Could not find questions' file: " , e);
+        } catch (IOException e) {
+            throw new QuestionReadException("Failed to create CSV reader from input stream:", e);
         }
         return csvReader;
     }
