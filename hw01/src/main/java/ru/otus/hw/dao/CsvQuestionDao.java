@@ -25,27 +25,21 @@ public class CsvQuestionDao implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-        CsvToBean csvToBean = getCsvToBean();
-        List<QuestionDto> questionDtoList = csvToBean.parse();
-        List<Question> questions = convertFromQuestionDtoList(questionDtoList);
-        return questions;
-    }
+        try (InputStreamReader inputStreamReader = new InputStreamReader(testDataProvider.provideTestData());
+             CSVReader csvReader = new CSVReaderBuilder(inputStreamReader)
+                     .withCSVParser(new CSVParserBuilder().withSeparator(';').build())
+                     .withSkipLines(1)
+                     .build()) {
 
-    private CSVReader getCsvReader() {
-        CSVReader csvReader;
-        try (InputStreamReader inputStreamReader = new InputStreamReader(testDataProvider.provideTestData())){
-            csvReader = new CSVReaderBuilder(inputStreamReader)
-                    .withCSVParser(new CSVParserBuilder()
-                            .withSeparator(';')
-                            .build())
-                    .withSkipLines(1)
-                    .build();
+            CsvToBean csvToBean = getCsvToBean(csvReader);
+            List<QuestionDto> questionDtoList = csvToBean.parse();
+            List<Question> questions = convertFromQuestionDtoList(questionDtoList);
+            return questions;
         } catch (IllegalArgumentException e) {
-            throw new QuestionReadException("Could not find questions' file: " , e);
+        throw new QuestionReadException("Could not find questions' file: ", e);
         } catch (IOException e) {
             throw new QuestionReadException("Failed to create CSV reader from input stream:", e);
         }
-        return csvReader;
     }
 
     private MappingStrategy<QuestionDto> getMappingStrategy() {
@@ -54,8 +48,8 @@ public class CsvQuestionDao implements QuestionDao {
         return mappingStrategy;
     }
 
-    private CsvToBean getCsvToBean() {
-        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(getCsvReader())
+    private CsvToBean getCsvToBean(CSVReader csvReader) throws IOException {
+        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(csvReader)
                 .withType(QuestionDto.class)
                 .withMappingStrategy(getMappingStrategy())
                 .build();
