@@ -1,6 +1,7 @@
 package ru.otus.hw.repositories;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -25,7 +26,13 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        return Optional.empty();
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
+        return Optional.ofNullable(jdbc.queryForObject(
+                "SELECT id, title, author_id, genre_id FROM books WHERE id = :id",
+                params,
+                new BookRowMapper(genreRepository, authorRepository)));
     }
 
     @Override
