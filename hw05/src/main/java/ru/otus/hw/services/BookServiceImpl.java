@@ -15,8 +15,6 @@ import java.util.Optional;
 @Service
 public class BookServiceImpl implements BookService {
 
-    // todo [ ]: Для сущности книги, предусмотреть операции создания,
-    //  обновления, удаления, вывода всех книг, а также вывода книги по id
     private final AuthorRepository authorRepository;
 
     private final GenreRepository genreRepository;

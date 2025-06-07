@@ -19,13 +19,11 @@ public class JdbcGenreRepository implements GenreRepository {
         this.jdbc = jdbc;
     }
 
-    // todo [x]: genre repo findAll():
     @Override
     public List<Genre> findAll() {
         return jdbc.query("select id, name from genres", new GenreRowMapper());
     }
 
-    // todo [x]: genre repo findById():
     @Override
     public Optional<Genre> findById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
@@ -40,7 +38,6 @@ public class JdbcGenreRepository implements GenreRepository {
         return genreOptional;
     }
 
-    // todo [x]: genre repo RowMapper
     private static class GenreRowMapper implements RowMapper<Genre> {
 
         @Override
