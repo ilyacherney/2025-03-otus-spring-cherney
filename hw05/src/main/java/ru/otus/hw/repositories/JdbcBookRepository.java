@@ -7,7 +7,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
+import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +20,8 @@ import java.util.*;
 public class JdbcBookRepository implements BookRepository {
 
     private final NamedParameterJdbcOperations jdbc;
+    private final GenreRepository genreRepository;
+    private final AuthorRepository authorRepository;
 
     @Override
     public Optional<Book> findById(long id) {
@@ -26,7 +30,8 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return new ArrayList<>();
+        return jdbc.query("SELECT id, title, author_id, genre_id FROM books",
+                new BookRowMapper(genreRepository, authorRepository));
     }
 
     @Override
@@ -67,11 +72,29 @@ public class JdbcBookRepository implements BookRepository {
         return book;
     }
 
+    @RequiredArgsConstructor
     private static class BookRowMapper implements RowMapper<Book> {
+
+        private final GenreRepository genreRepository;
+        private final AuthorRepository authorRepository;
 
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return null;
+            Book book = new Book();
+
+            book.setId(rs.getLong("id"));
+
+            book.setTitle(rs.getString("title"));
+
+            long genreId = rs.getLong("genre_id");
+            Genre genre = genreRepository.findById(genreId).orElseGet(null);
+            book.setGenre(genre);
+
+            long authorId = rs.getLong("author_id");
+            Author author = authorRepository.findById(authorId).orElseGet(null);
+            book.setAuthor(author);
+
+            return book;
         }
     }
 }
