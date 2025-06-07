@@ -51,7 +51,13 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        // todo: ...
+        // todo [x]: JdbcBookRepository.deleteById
+        String query = "DELETE FROM books WHERE id = :id";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
+        jdbc.update(query, params);
     }
 
     private Book insert(Book book) {
