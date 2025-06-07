@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -28,7 +29,6 @@ public class JdbcBookRepository implements BookRepository {
     public Optional<Book> findById(long id) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
-
         return Optional.ofNullable(jdbc.queryForObject(
                 "SELECT id, title, author_id, genre_id FROM books WHERE id = :id",
                 params,
@@ -51,22 +51,14 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public void deleteById(long id) {
-        // todo [x]: JdbcBookRepository.deleteById
         String query = "DELETE FROM books WHERE id = :id";
-
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
-
         jdbc.update(query, params);
     }
 
     private Book insert(Book book) {
-        // todo: ...
         var keyHolder = new GeneratedKeyHolder();
-        // todo: noinspection DataFlowIssue
-
-
-        // todo: аналогично и в других репо так сделать через MapSqlParameterSource
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         params.addValue("title", book.getTitle());
@@ -75,13 +67,25 @@ public class JdbcBookRepository implements BookRepository {
 
         jdbc.update("INSERT INTO books (title, author_id, genre_id) VALUES (:title, :author_id, :genre_id)", params, keyHolder, new String[]{"id"});
 
+        //noinspection DataFlowIssue
         book.setId(keyHolder.getKeyAs(Long.class));
         return book;
     }
 
     private Book update(Book book) {
-        // todo: ...
-        // todo: Выбросить EntityNotFoundException если не обновлено ни одной записи в БД
+        String query = "UPDATE books SET title = :title, author_id = :authorId, genre_id = :genreId where id = :id";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", book.getId());
+        params.put("title", book.getTitle());
+        params.put("genreId", book.getGenre().getId());
+        params.put("authorId", book.getAuthor().getId());
+
+        int affectedRows = jdbc.update(query, params);
+        if (affectedRows == 0) {
+            throw new EntityNotFoundException("Book with id %d not found".formatted(book.getId()));
+        }
+
         return book;
     }
 
