@@ -9,7 +9,10 @@ import ru.otus.hw.models.Author;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 
 @Repository
 @AllArgsConstructor
@@ -19,7 +22,7 @@ public class JdbcAuthorRepository implements AuthorRepository {
 
     @Override
     public List<Author> findAll() {
-        return jdbc.query("select id, full_name from authors", new AuthorRowMapper());
+        return jdbc.query("SELECT id, full_name FROM authors", new AuthorRowMapper());
     }
 
     @Override
@@ -29,7 +32,10 @@ public class JdbcAuthorRepository implements AuthorRepository {
         Optional<Author> authorOptional;
 
         try {
-            authorOptional = Optional.of(jdbc.queryForObject("SELECT id, full_name FROM authors where id = :id", params, new AuthorRowMapper()));
+            authorOptional = Optional.of(jdbc.queryForObject(
+                    "SELECT id, full_name " +
+                        "FROM authors " +
+                        "WHERE id = :id", params, new AuthorRowMapper()));
         } catch (DataAccessException e) {
             return Optional.empty();
         }

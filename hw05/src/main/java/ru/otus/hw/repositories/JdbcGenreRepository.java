@@ -8,7 +8,10 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class JdbcGenreRepository implements GenreRepository {
@@ -30,7 +33,8 @@ public class JdbcGenreRepository implements GenreRepository {
         Optional<Genre> genreOptional;
 
         try {
-            genreOptional = Optional.of(jdbc.queryForObject("select id, name from genres where id = :id", params, new GenreRowMapper()));
+            genreOptional = Optional.of(jdbc.queryForObject(
+                    "select id, name from genres where id = :id", params, new GenreRowMapper()));
         } catch (DataAccessException e) {
             return Optional.empty();
         }

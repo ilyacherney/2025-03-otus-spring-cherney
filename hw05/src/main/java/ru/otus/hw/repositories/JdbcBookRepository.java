@@ -14,7 +14,10 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -86,7 +89,8 @@ public class JdbcBookRepository implements BookRepository {
         params.addValue("author_id", book.getAuthor().getId());
         params.addValue("genre_id", book.getGenre().getId());
 
-        jdbc.update("INSERT INTO books (title, author_id, genre_id) VALUES (:title, :author_id, :genre_id)", params, keyHolder, new String[]{"id"});
+        jdbc.update("INSERT INTO books (title, author_id, genre_id) " +
+                        "VALUES (:title, :author_id, :genre_id)", params, keyHolder, new String[]{"id"});
 
         //noinspection DataFlowIssue
         book.setId(keyHolder.getKeyAs(Long.class));
