@@ -5,7 +5,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -22,8 +21,6 @@ import java.util.*;
 public class JdbcBookRepository implements BookRepository {
 
     private final NamedParameterJdbcOperations jdbc;
-    private final GenreRepository genreRepository;
-    private final AuthorRepository authorRepository;
 
     @Override
     public Optional<Book> findById(long id) {
@@ -32,9 +29,19 @@ public class JdbcBookRepository implements BookRepository {
 
         try {
             return Optional.of(jdbc.queryForObject(
-                    "SELECT id, title, author_id, genre_id FROM books WHERE id = :id",
+                        "SELECT " +
+                                "b.id AS book_id, " +
+                                "b.title AS book_title, " +
+                                "b.author_id AS author_id, " +
+                                "b.genre_id AS genre_id, " +
+                                "a.full_name AS author_full_name, " +
+                                "g.name AS genre_name " +
+                            "FROM books b " +
+                            "LEFT OUTER JOIN authors a ON a.id = b.author_id " +
+                            "LEFT OUTER JOIN genres g on g.id = b.genre_id " +
+                            "WHERE b.id = :id",
                     params,
-                    new BookRowMapper(genreRepository, authorRepository)));
+                    new BookRowMapper()));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -42,8 +49,17 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return jdbc.query("SELECT id, title, author_id, genre_id FROM books",
-                new BookRowMapper(genreRepository, authorRepository));
+        return jdbc.query("SELECT " +
+                "b.id AS book_id, " +
+                "b.title AS book_title, " +
+                "b.author_id AS author_id, " +
+                "b.genre_id AS genre_id, " +
+                "a.full_name AS author_full_name, " +
+                "g.name AS genre_name " +
+                "FROM books b " +
+                "LEFT OUTER JOIN authors a ON a.id = b.author_id " +
+                "LEFT OUTER JOIN genres g on g.id = b.genre_id ",
+                new BookRowMapper());
     }
 
     @Override
@@ -97,23 +113,20 @@ public class JdbcBookRepository implements BookRepository {
     @RequiredArgsConstructor
     private static class BookRowMapper implements RowMapper<Book> {
 
-        private final GenreRepository genreRepository;
-        private final AuthorRepository authorRepository;
-
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
             Book book = new Book();
-
-            book.setId(rs.getLong("id"));
-
-            book.setTitle(rs.getString("title"));
+            book.setId(rs.getLong("book_id"));
+            book.setTitle(rs.getString("book_title"));
 
             long genreId = rs.getLong("genre_id");
-            Genre genre = genreRepository.findById(genreId).orElseGet(null);
+            String genreName = rs.getString("genre_name");
+            Genre genre = new Genre(genreId, genreName);
             book.setGenre(genre);
 
             long authorId = rs.getLong("author_id");
-            Author author = authorRepository.findById(authorId).orElseGet(null);
+            String authorFullName = rs.getString("author_full_name");
+            Author author = new Author(authorId, authorFullName);
             book.setAuthor(author);
 
             return book;
