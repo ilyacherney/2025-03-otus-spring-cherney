@@ -29,10 +29,15 @@ public class JdbcBookRepository implements BookRepository {
     public Optional<Book> findById(long id) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
-        return Optional.ofNullable(jdbc.queryForObject(
-                "SELECT id, title, author_id, genre_id FROM books WHERE id = :id",
-                params,
-                new BookRowMapper(genreRepository, authorRepository)));
+
+        try {
+            return Optional.of(jdbc.queryForObject(
+                    "SELECT id, title, author_id, genre_id FROM books WHERE id = :id",
+                    params,
+                    new BookRowMapper(genreRepository, authorRepository)));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
