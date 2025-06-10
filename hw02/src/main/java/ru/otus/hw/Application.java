@@ -6,10 +6,11 @@ import ru.otus.hw.service.TestRunnerService;
 public class Application {
     public static void main(String[] args) {
 
-        //Создать контекст на основе Annotation/Java конфигурирования
+        // todo [ ]: Создать контекст на основе Annotation/Java конфигурирования
         ApplicationContext context = null;
         var testRunnerService = context.getBean(TestRunnerService.class);
         testRunnerService.run();
 
+        //  todo [ ]: добавить вопросы в questions.csv
     }
 }
