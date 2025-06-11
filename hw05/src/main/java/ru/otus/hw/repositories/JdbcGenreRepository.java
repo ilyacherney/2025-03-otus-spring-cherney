@@ -29,17 +29,10 @@ public class JdbcGenreRepository implements GenreRepository {
 
     @Override
     public Optional<Genre> findById(long id) {
-        Map<String, Object> params = Collections.singletonMap("id", id);
-        Optional<Genre> genreOptional;
-
-        try {
-            genreOptional = Optional.of(jdbc.queryForObject(
-                    "select id, name from genres where id = :id", params, new GenreRowMapper()));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-
-        return genreOptional;
+        Map<String, Object> params = Map.of("id", id);
+        String query = "select id, name from genres where id = :id";
+        List<Genre> genres = jdbc.query(query, params, new GenreRowMapper());
+        return genres.isEmpty() ? Optional.empty() : Optional.of(genres.get(0));
     }
 
     private static class GenreRowMapper implements RowMapper<Genre> {

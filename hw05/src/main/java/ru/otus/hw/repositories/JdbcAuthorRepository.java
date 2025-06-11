@@ -27,20 +27,10 @@ public class JdbcAuthorRepository implements AuthorRepository {
 
     @Override
     public Optional<Author> findById(long id) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", id);
-        Optional<Author> authorOptional;
-
-        try {
-            authorOptional = Optional.of(jdbc.queryForObject(
-                    "SELECT id, full_name " +
-                        "FROM authors " +
-                        "WHERE id = :id", params, new AuthorRowMapper()));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-
-        return authorOptional;
+        Map<String, Object> params = Map.of("id", id);
+        String query = "SELECT id, full_name FROM authors WHERE id = :id";
+        List<Author> authors = jdbc.query(query, params, new AuthorRowMapper());
+        return authors.isEmpty() ? Optional.empty() : Optional.of(authors.get(0));
     }
 
     private static class AuthorRowMapper implements RowMapper<Author> {

@@ -27,27 +27,22 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", id);
+        Map<String, Object> params = Map.of("id", id);
 
-        try {
-            return Optional.of(jdbc.queryForObject(
-                        "SELECT " +
-                                "b.id AS book_id, " +
-                                "b.title AS book_title, " +
-                                "b.author_id AS author_id, " +
-                                "b.genre_id AS genre_id, " +
-                                "a.full_name AS author_full_name, " +
-                                "g.name AS genre_name " +
-                            "FROM books b " +
-                            "LEFT OUTER JOIN authors a ON a.id = b.author_id " +
-                            "LEFT OUTER JOIN genres g on g.id = b.genre_id " +
-                            "WHERE b.id = :id",
-                    params,
-                    new BookRowMapper()));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+        String query = "SELECT " +
+                "b.id AS book_id, " +
+                "b.title AS book_title, " +
+                "b.author_id AS author_id, " +
+                "b.genre_id AS genre_id, " +
+                "a.full_name AS author_full_name, " +
+                "g.name AS genre_name " +
+                "FROM books b " +
+                "LEFT OUTER JOIN authors a ON a.id = b.author_id " +
+                "LEFT OUTER JOIN genres g on g.id = b.genre_id " +
+                "WHERE b.id = :id";
+
+        List<Book> books = jdbc.query(query, params, new BookRowMapper());
+        return books.isEmpty() ? Optional.empty() : Optional.of(books.get(0));
     }
 
     @Override
