@@ -13,9 +13,9 @@ import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
-import ru.otus.hw.service.TestDataProvider;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,10 @@ import java.util.List;
 @Repository
 public class CsvQuestionDao implements QuestionDao {
     private final TestFileNameProvider fileNameProvider;
-    private final TestDataProvider testDataProvider;
 
     @Override
     public List<Question> findAll() {
-        try (InputStreamReader inputStreamReader = new InputStreamReader(testDataProvider.provideTestData());
+        try (InputStreamReader inputStreamReader = new InputStreamReader(provideTestData());
              CSVReader csvReader = new CSVReaderBuilder(inputStreamReader)
                      .withCSVParser(new CSVParserBuilder().withSeparator(';').build())
                      .withSkipLines(1)
@@ -66,5 +65,16 @@ public class CsvQuestionDao implements QuestionDao {
             questions.add(question);
         }
         return questions;
+    }
+
+    public InputStream provideTestData() {
+        String fileName = fileNameProvider.getTestFileName();
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream == null) {
+            throw new IllegalArgumentException("file not found! " + fileName);
+        } else {
+            return inputStream;
+        }
     }
 }
