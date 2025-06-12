@@ -1,10 +1,22 @@
 package ru.otus.hw.dao;
 
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.MappingStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.config.TestFileNameProvider;
+import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Question;
+import ru.otus.hw.exceptions.QuestionReadException;
+import ru.otus.hw.service.TestDataProvider;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +24,47 @@ import java.util.List;
 @Repository
 public class CsvQuestionDao implements QuestionDao {
     private final TestFileNameProvider fileNameProvider;
+    private final TestDataProvider testDataProvider;
 
     @Override
     public List<Question> findAll() {
-        //  todo [ ]: Использовать CsvToBean
-        // https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
-        //  todo [ ]: Использовать QuestionReadException
-        // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
+        try (InputStreamReader inputStreamReader = new InputStreamReader(testDataProvider.provideTestData());
+             CSVReader csvReader = new CSVReaderBuilder(inputStreamReader)
+                     .withCSVParser(new CSVParserBuilder().withSeparator(';').build())
+                     .withSkipLines(1)
+                     .build()) {
 
-        return new ArrayList<>();
+            CsvToBean csvToBean = getCsvToBean(csvReader);
+            List<QuestionDto> questionDtoList = csvToBean.parse();
+            List<Question> questions = convertFromQuestionDtoList(questionDtoList);
+            return questions;
+        } catch (IllegalArgumentException e) {
+            throw new QuestionReadException("Could not find questions' file: ", e);
+        } catch (IOException e) {
+            throw new QuestionReadException("Failed to create CSV reader from input stream:", e);
+        }
+    }
+
+    private MappingStrategy<QuestionDto> getMappingStrategy() {
+        MappingStrategy<QuestionDto> mappingStrategy = new ColumnPositionMappingStrategy<>();
+        mappingStrategy.setType(QuestionDto.class);
+        return mappingStrategy;
+    }
+
+    private CsvToBean getCsvToBean(CSVReader csvReader) throws IOException {
+        CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder(csvReader)
+                .withType(QuestionDto.class)
+                .withMappingStrategy(getMappingStrategy())
+                .build();
+        return csvToBean;
+    }
+
+    private List<Question> convertFromQuestionDtoList(List<QuestionDto> questionDtoList) {
+        List<Question> questions = new ArrayList<>();
+        for (QuestionDto questionDto : questionDtoList) {
+            Question question = questionDto.toDomainObject();
+            questions.add(question);
+        }
+        return questions;
     }
 }

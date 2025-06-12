@@ -10,11 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppProperties implements TestConfig, TestFileNameProvider {
 
-    // todo [ ]: внедрить свойство из application.properties
     @Value("${test.rightAnswersCountToPass}")
     private int rightAnswersCountToPass;
 
-    // todo [ ]: внедрить свойство из application.properties
     @Value("${test.fileName}")
     private String testFileName;
 }

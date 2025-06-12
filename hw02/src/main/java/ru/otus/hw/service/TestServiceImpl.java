@@ -3,8 +3,11 @@ package ru.otus.hw.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dao.QuestionDao;
+import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,18 @@ public class TestServiceImpl implements TestService {
         var testResult = new TestResult(student);
 
         for (var question: questions) {
-            var isAnswerValid = false; // Задать вопрос, получить ответ
+            var isAnswerValid = false;
+            List<Answer> answers = question.answers();
+
+            ioService.printLine(question.text());
+            for (int i = 0; i < answers.size(); i++) {
+                System.out.println((i + 1) + ". " + answers.get(i).text());
+            }
+
+            int chosenAnswer = ioService.readIntForRange(1, answers.size(),
+                    "No answer with entered number exists");
+
+            isAnswerValid = question.answers().get(chosenAnswer - 1).isCorrect();
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
