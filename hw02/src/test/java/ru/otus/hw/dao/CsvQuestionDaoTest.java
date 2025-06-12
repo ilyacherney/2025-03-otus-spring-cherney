@@ -3,12 +3,11 @@ package ru.otus.hw.dao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import ru.otus.hw.config.AppProperties;
-import ru.otus.hw.dao.CsvQuestionDao;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
-import ru.otus.hw.service.TestDataProvider;
 
 import java.io.InputStream;
 import java.util.List;
@@ -22,16 +21,17 @@ class CsvQuestionDaoTest {
 
     @BeforeEach
     void setUp() {
-//        AppProperties props = n
-//        csvQuestionDao = new CsvQuestionDao();
+        AppProperties props = new AppProperties();
+        props.setTestFileName("test-questions.csv");
+        props.setRightAnswersCountToPass(3);
+
+        csvQuestionDao = new CsvQuestionDao(props);
     }
 
     @Test
     void shouldParseQuestionsFromExistingCsvFile() {
         InputStream csvStream = getClass().getClassLoader().getResourceAsStream("test-questions.csv");
         assert csvStream != null : "CSV file not found in test resources";
-
-        when(csvQuestionDao.provideTestData()).thenReturn(csvStream);
 
         List<Question> result = csvQuestionDao.findAll();
 
@@ -42,8 +42,9 @@ class CsvQuestionDaoTest {
 
     @Test
     void shouldThrowExceptionWhenCsvFileDoesNotExist() {
+
         QuestionReadException exception = Assertions.assertThrows(QuestionReadException.class, () -> {
-            when(testDataProvider.provideTestData()).thenThrow(IllegalArgumentException.class);
+            when(csvQuestionDao.provideTestData()).thenThrow(IllegalArgumentException.class);
             csvQuestionDao.findAll();
         });
         assertThat(exception).hasMessageStartingWith("Could not find questions' file");
