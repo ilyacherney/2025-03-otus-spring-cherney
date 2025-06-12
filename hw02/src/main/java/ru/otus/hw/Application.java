@@ -11,8 +11,8 @@ public class Application {
                 new AnnotationConfigApplicationContext("ru/otus/hw");
 
         var testRunnerService = context.getBean(TestRunnerService.class);
-//        testRunnerService.run();
+        testRunnerService.run();
 
-        //  todo [ ]: добавить вопросы в questions.csv
+        //  todo [x]: добавить вопросы в questions.csv
     }
 }
