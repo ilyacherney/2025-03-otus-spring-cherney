@@ -23,7 +23,6 @@ public class TestServiceImpl implements TestService {
         ioService.printFormattedLine("Please answer the questions below%n");
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
-
         for (var question: questions) {
             var isAnswerValid = false;
             List<Answer> answers = question.answers();
@@ -32,7 +31,6 @@ public class TestServiceImpl implements TestService {
             for (int i = 0; i < answers.size(); i++) {
                 ioService.printLine((i + 1) + ". " + answers.get(i).text());
             }
-
             int chosenAnswer = ioService.readIntForRange(1, answers.size(),
                     "No answer with entered number exists");
 
@@ -41,7 +39,6 @@ public class TestServiceImpl implements TestService {
             } else {
                 isAnswerValid = question.answers().get(chosenAnswer - 1).isCorrect();
             }
-
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
