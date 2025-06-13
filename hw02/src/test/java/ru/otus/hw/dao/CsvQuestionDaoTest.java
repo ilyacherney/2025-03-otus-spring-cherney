@@ -17,21 +17,18 @@ import static org.mockito.Mockito.when;
 
 class CsvQuestionDaoTest {
 
+    private AppProperties props;
     private CsvQuestionDao csvQuestionDao;
 
     @BeforeEach
     void setUp() {
-        AppProperties props = new AppProperties();
-        props.setTestFileName("test-questions.csv");
-        props.setRightAnswersCountToPass(3);
-
-        csvQuestionDao = new CsvQuestionDao(props);
+        this.props = new AppProperties();
+        this.csvQuestionDao = new CsvQuestionDao(props);
     }
 
     @Test
     void shouldParseQuestionsFromExistingCsvFile() {
-        InputStream csvStream = getClass().getClassLoader().getResourceAsStream("test-questions.csv");
-        assert csvStream != null : "CSV file not found in test resources";
+        props.setTestFileName("test-questions.csv");
 
         List<Question> result = csvQuestionDao.findAll();
 
@@ -42,11 +39,12 @@ class CsvQuestionDaoTest {
 
     @Test
     void shouldThrowExceptionWhenCsvFileDoesNotExist() {
+        props.setTestFileName("non-existing.csv");
 
         QuestionReadException exception = Assertions.assertThrows(QuestionReadException.class, () -> {
-            when(csvQuestionDao.provideTestData()).thenThrow(IllegalArgumentException.class);
             csvQuestionDao.findAll();
         });
+
         assertThat(exception).hasMessageStartingWith("Could not find questions' file");
     }
 }

@@ -30,13 +30,18 @@ public class TestServiceImpl implements TestService {
 
             ioService.printLine(question.text());
             for (int i = 0; i < answers.size(); i++) {
-                System.out.println((i + 1) + ". " + answers.get(i).text());
+                ioService.printLine((i + 1) + ". " + answers.get(i).text());
             }
 
             int chosenAnswer = ioService.readIntForRange(1, answers.size(),
                     "No answer with entered number exists");
 
-            isAnswerValid = question.answers().get(chosenAnswer - 1).isCorrect();
+            if (chosenAnswer == 0) {
+                isAnswerValid = false;
+            } else {
+                isAnswerValid = question.answers().get(chosenAnswer - 1).isCorrect();
+            }
+
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
