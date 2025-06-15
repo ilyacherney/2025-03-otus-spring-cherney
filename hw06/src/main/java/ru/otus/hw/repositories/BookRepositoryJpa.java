@@ -1,17 +1,14 @@
 package ru.otus.hw.repositories;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Book;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
 public class BookRepositoryJpa implements BookRepository{
 
     @PersistenceContext
@@ -42,6 +39,7 @@ public class BookRepositoryJpa implements BookRepository{
 
     @Override
     public void deleteById(long id) {
-
+        Book book = em.find(Book.class, id);
+        em.remove(book);
     }
 }
