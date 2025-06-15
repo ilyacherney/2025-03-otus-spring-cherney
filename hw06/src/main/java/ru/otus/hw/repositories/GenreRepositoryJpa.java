@@ -22,7 +22,7 @@ public class GenreRepositoryJpa implements GenreRepository {
 
     @Override
     public Optional<Genre> findById(long id) {
-        return Optional.empty();
+        return Optional.ofNullable(em.find(Genre.class, id));
     }
 
 }
