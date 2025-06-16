@@ -14,9 +14,6 @@ public class AppConfiguration {
     @Bean
     public AppProperties appProperties(@Value("${test.rightAnswersCountToPass}") int rightAnswersCountToPass,
                                        @Value("${test.fileName}") String testFileName) {
-        AppProperties props = new AppProperties();
-        props.setRightAnswersCountToPass(rightAnswersCountToPass);
-        props.setTestFileName(testFileName);
-        return props;
+        return new AppProperties(rightAnswersCountToPass, testFileName);
     }
 }
