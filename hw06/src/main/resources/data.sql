@@ -8,4 +8,4 @@ insert into books(title, author_id, genre_id)
 values ('BookTitle_1', 1, 1), ('BookTitle_2', 2, 2), ('BookTitle_3', 3, 3);
 
 insert into comments(text, book_id)
-values("Хорошая книга, понравилась!", 1), ("В целом норм, но чего-то не хватает что ли...", 2);
+values ('Great book!', 1), ('Very interesting...', 2);
