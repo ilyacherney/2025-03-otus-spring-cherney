@@ -14,10 +14,6 @@ public class BookRepositoryJpa implements BookRepository{
     @PersistenceContext
     private EntityManager em;
 
-    public BookRepositoryJpa(EntityManager em) {
-        this.em = em;
-    }
-
     @Override
     public Optional<Book> findById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
@@ -25,7 +21,11 @@ public class BookRepositoryJpa implements BookRepository{
 
     @Override
     public List<Book> findAll() {
-        return em.createQuery("SELECT book FROM books book").getResultList();
+        return em.createQuery(
+                "SELECT b FROM Book b " +
+                        "JOIN FETCH b.author " +
+                        "JOIN FETCH b.genre")
+                .getResultList();
     }
 
     @Override

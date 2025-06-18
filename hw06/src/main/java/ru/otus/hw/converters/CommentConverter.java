@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
 
-@RequiredArgsConstructor
 @Component
 public class CommentConverter {
     public String commentToString(Comment comment) {

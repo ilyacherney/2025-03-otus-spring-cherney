@@ -15,10 +15,6 @@ public class CommentRepositoryJpa implements CommentRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public CommentRepositoryJpa(EntityManager em) {
-        this.em = em;
-    }
-
     @Override
     public Optional<Comment> findById(long id) {
         return Optional.ofNullable(em.find(Comment.class, id));
