@@ -23,11 +23,9 @@ public class AuthorRepositoryJpaTest {
     @Test
     void shouldFindAllAuthors() {
         Author author1 = new Author();
-        author1.setFullName("Ernest Hemingway");
         tem.persistAndFlush(author1);
 
         Author author2 = new Author();
-        author2.setFullName("Edgar Allan Poe");
         tem.persistAndFlush(author2);
 
         List<Author> savedAuthors = List.of(author1, author2);
