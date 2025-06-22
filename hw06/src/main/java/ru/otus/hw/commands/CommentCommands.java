@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class CommentCommands {
 
     private final CommentService commentService;
+
     private final CommentConverter commentConverter;
 
     @ShellMethod(value = "Find comment by ID", key = "cbid")
