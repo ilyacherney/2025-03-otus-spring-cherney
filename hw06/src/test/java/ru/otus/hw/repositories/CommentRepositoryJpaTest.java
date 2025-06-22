@@ -25,7 +25,19 @@ public class CommentRepositoryJpaTest {
 
     @Test
     void shouldFindById() {
+        Author author1 = new Author();
+        tem.persistAndFlush(author1);
+
+        Genre genre1 = new Genre();
+        tem.persistAndFlush(genre1);
+
+        Book book = new Book();
+        book.setGenre(genre1);
+        book.setAuthor(author1);
+        tem.persistAndFlush(book);
+
         Comment commentToSave = new Comment();
+        commentToSave.setBook(book);
         tem.persistAndFlush(commentToSave);
 
         Comment foundComment = commentRepository.findById(commentToSave.getId()).orElseThrow();
