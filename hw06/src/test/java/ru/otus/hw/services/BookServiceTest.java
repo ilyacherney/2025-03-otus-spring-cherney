@@ -1,12 +1,10 @@
 package ru.otus.hw.services;
 
-import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
@@ -15,15 +13,15 @@ import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.AuthorRepositoryJpa;
 import ru.otus.hw.repositories.BookRepositoryJpa;
 import ru.otus.hw.repositories.CommentRepositoryJpa;
-
-import java.util.List;
+import ru.otus.hw.repositories.GenreRepositoryJpa;
 
 @DataJpaTest
-@Import({CommentServiceImpl.class, CommentRepositoryJpa.class, BookRepositoryJpa.class, AuthorRepositoryJpa.class})
-public class CommentServiceTest {
+@Import({BookServiceImpl.class, BookRepositoryJpa.class, CommentRepositoryJpa.class, AuthorRepositoryJpa.class,
+        GenreRepositoryJpa.class})
+public class BookServiceTest {
 
     @Autowired
-    private CommentServiceImpl commentService;
+    private BookServiceImpl bookService;
 
     @Autowired
     private TestEntityManager tem;
@@ -39,21 +37,21 @@ public class CommentServiceTest {
         tem.persistAndFlush(genre1);
 
         Book bookToSave = new Book();
-        bookToSave.setTitle("War and Peace");
         bookToSave.setAuthor(author1);
         bookToSave.setGenre(genre1);
         tem.persistAndFlush(bookToSave);
 
         Comment commentToSave = new Comment();
         commentToSave.setBook(bookToSave);
+        commentToSave.setText("Good book!");
         tem.persistAndFlush(commentToSave);
 
-        Comment foundComment = commentService.findById(commentToSave.getId()).orElseThrow();
+        Book foundBook = bookService.findById(bookToSave.getId()).orElseThrow();
 
         Assertions.assertThatCode(() -> {
-                    String bookTitle = foundComment.getBook().getTitle();
-                    String bookAuthorFullName = foundComment.getBook().getAuthor().getFullName();
-                    String bookGenreName = foundComment.getBook().getGenre().getName();
-                }).doesNotThrowAnyException();
+            String bookGenreName = foundBook.getGenre().getName();
+            String bookAuthorFullName = foundBook.getAuthor().getFullName();
+        }).doesNotThrowAnyException();
+
     }
 }
