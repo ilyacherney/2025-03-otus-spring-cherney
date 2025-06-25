@@ -1,25 +1,21 @@
 package ru.otus.hw.services;
 
-import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.AuthorRepositoryJpa;
-import ru.otus.hw.repositories.BookRepositoryJpa;
-import ru.otus.hw.repositories.CommentRepositoryJpa;
-
-import java.util.List;
+import ru.otus.hw.repositories.JpaAuthorRepository;
+import ru.otus.hw.repositories.JpaBookRepository;
+import ru.otus.hw.repositories.JpaCommentRepository;
 
 @DataJpaTest
-@Import({CommentServiceImpl.class, CommentRepositoryJpa.class, BookRepositoryJpa.class, AuthorRepositoryJpa.class})
+@Import({CommentServiceImpl.class, JpaCommentRepository.class, JpaBookRepository.class, JpaAuthorRepository.class})
 public class CommentServiceTest {
 
     @Autowired

@@ -14,11 +14,11 @@ import ru.otus.hw.models.Genre;
 import java.util.List;
 
 @DataJpaTest
-@Import(CommentRepositoryJpa.class)
-public class CommentRepositoryJpaTest {
+@Import(JpaCommentRepository.class)
+public class JpaCommentRepositoryTest {
 
     @Autowired
-    private CommentRepositoryJpa commentRepository;
+    private JpaCommentRepository commentRepository;
 
     @Autowired
     private TestEntityManager tem;

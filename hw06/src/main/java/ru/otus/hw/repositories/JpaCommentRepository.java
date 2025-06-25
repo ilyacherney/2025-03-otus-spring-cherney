@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CommentRepositoryJpa implements CommentRepository {
+public class JpaCommentRepository implements CommentRepository {
 
     @PersistenceContext
     private EntityManager em;

@@ -13,14 +13,14 @@ import ru.otus.hw.models.Genre;
 import java.util.List;
 
 @DataJpaTest
-@Import(BookRepositoryJpa.class)
-public class BookRepositoryJpaTest {
+@Import(JpaBookRepository.class)
+public class JpaBookRepositoryTest {
 
     @Autowired
     private TestEntityManager tem;
 
     @Autowired
-    private BookRepositoryJpa bookRepository;
+    private JpaBookRepository bookRepository;
 
     @Test
     void shouldFindById() {

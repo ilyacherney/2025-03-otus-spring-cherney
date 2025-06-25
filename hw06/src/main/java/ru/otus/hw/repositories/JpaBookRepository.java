@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class BookRepositoryJpa implements BookRepository {
+public class JpaBookRepository implements BookRepository {
 
     @PersistenceContext
     private EntityManager em;

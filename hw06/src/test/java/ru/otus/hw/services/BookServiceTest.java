@@ -10,14 +10,14 @@ import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.AuthorRepositoryJpa;
-import ru.otus.hw.repositories.BookRepositoryJpa;
-import ru.otus.hw.repositories.CommentRepositoryJpa;
-import ru.otus.hw.repositories.GenreRepositoryJpa;
+import ru.otus.hw.repositories.JpaAuthorRepository;
+import ru.otus.hw.repositories.JpaBookRepository;
+import ru.otus.hw.repositories.JpaCommentRepository;
+import ru.otus.hw.repositories.JpaGenreRepository;
 
 @DataJpaTest
-@Import({BookServiceImpl.class, BookRepositoryJpa.class, CommentRepositoryJpa.class, AuthorRepositoryJpa.class,
-        GenreRepositoryJpa.class})
+@Import({BookServiceImpl.class, JpaBookRepository.class, JpaCommentRepository.class, JpaAuthorRepository.class,
+        JpaGenreRepository.class})
 public class BookServiceTest {
 
     @Autowired

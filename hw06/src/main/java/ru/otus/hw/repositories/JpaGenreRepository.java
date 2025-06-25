@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class GenreRepositoryJpa implements GenreRepository {
+public class JpaGenreRepository implements GenreRepository {
 
     @PersistenceContext
     private EntityManager em;

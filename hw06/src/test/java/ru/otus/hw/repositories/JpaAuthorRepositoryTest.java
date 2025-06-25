@@ -10,15 +10,15 @@ import ru.otus.hw.models.Author;
 
 import java.util.List;
 
-@Import(AuthorRepositoryJpa.class)
+@Import(JpaAuthorRepository.class)
 @DataJpaTest
-public class AuthorRepositoryJpaTest {
+public class JpaAuthorRepositoryTest {
 
     @Autowired
     private TestEntityManager tem;
 
     @Autowired
-    private AuthorRepositoryJpa authorRepositoryJpa;
+    private JpaAuthorRepository jpaAuthorRepository;
 
     @Test
     void shouldFindAllAuthors() {
@@ -30,7 +30,7 @@ public class AuthorRepositoryJpaTest {
 
         List<Author> savedAuthors = List.of(author1, author2);
 
-        List<Author> foundAuthors = authorRepositoryJpa.findAll();
+        List<Author> foundAuthors = jpaAuthorRepository.findAll();
 
         Assertions.assertThat(foundAuthors).containsAll(savedAuthors);
     }
@@ -40,7 +40,7 @@ public class AuthorRepositoryJpaTest {
         Author author = new Author();
         tem.persistAndFlush(author);
 
-        Author foundAuthor = authorRepositoryJpa.findById(author.getId()).orElseThrow();
+        Author foundAuthor = jpaAuthorRepository.findById(author.getId()).orElseThrow();
 
         Assertions.assertThat(foundAuthor).isEqualTo(author);
     }
