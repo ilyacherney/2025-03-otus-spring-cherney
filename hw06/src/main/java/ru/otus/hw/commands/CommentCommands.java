@@ -45,10 +45,10 @@ public class CommentCommands {
         commentService.deleteComment(id);
     }
 
-    // cupd 1 "The best book ever" 1
+    // cupd 1 "The best book ever"
     @ShellMethod(value = "Update comment", key = "cupd")
-    public String updateComment(long commentId, String text, long bookId) {
-        Comment comment = commentService.updateComment(commentId, text, bookId);
+    public String updateComment(long commentId, String text) {
+        Comment comment = commentService.updateComment(commentId, text);
         return commentConverter.commentToString(comment);
     }
 }
