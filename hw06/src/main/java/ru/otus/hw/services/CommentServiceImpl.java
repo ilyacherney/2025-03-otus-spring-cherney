@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id " + bookId + " not found"));
         Comment comment = new Comment(0, text, book);
-        return saveComment(comment);
+        return commentRepository.saveComment(comment);
     }
 
     @Override
@@ -50,10 +50,6 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id " + commentId + " not found"));
         comment.setText(text);
-        return saveComment(comment);
-    }
-
-    private Comment saveComment(Comment comment) {
         return commentRepository.saveComment(comment);
     }
 }
