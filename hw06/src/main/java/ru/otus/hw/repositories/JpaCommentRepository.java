@@ -19,9 +19,6 @@ public class JpaCommentRepository implements CommentRepository {
     public Optional<Comment> findById(long id) {
         Query query = em.createQuery(
                 "SELECT c FROM Comment c " +
-                "JOIN FETCH c.book b " +
-                "JOIN FETCH b.author " +
-                "JOIN FETCH b.genre " +
                 "WHERE c.id = :id",
                 Comment.class);
 
