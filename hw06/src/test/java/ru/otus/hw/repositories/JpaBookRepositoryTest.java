@@ -24,52 +24,34 @@ public class JpaBookRepositoryTest {
 
     @Test
     void shouldFindById() {
-        Book bookToSave = new Book();
-        tem.persistAndFlush(bookToSave);
+        Book foundBook = bookRepository.findById(1L).orElseThrow();
 
-        Book foundBook = bookRepository.findById(bookToSave.getId()).orElseThrow();
-
-        Assertions.assertThat(foundBook).isEqualTo(bookToSave);
+        Assertions.assertThat(foundBook.getTitle()).isEqualTo("War And Peace");
     }
 
     @Test
     void shouldFindAll() {
-        Author author1 = new Author();
-        tem.persistAndFlush(author1);
-
-        Genre genre1 = new Genre();
-        tem.persistAndFlush(genre1);
-
-        Book book1 = new Book();
-        book1.setAuthor(author1);
-        book1.setGenre(genre1);
-        tem.persistAndFlush(book1);
-
-        Book book2 = new Book();
-        book2.setAuthor(author1);
-        book2.setGenre(genre1);
-        tem.persistAndFlush(book2);
-
-        List<Book> savedBooks = List.of(book1, book2);
-
         List<Book> foundBooks = bookRepository.findAll();
 
-        Assertions.assertThat(foundBooks).containsAll(savedBooks);
+        Assertions.assertThat(foundBooks)
+                .extracting(Book::getTitle)
+                .containsExactlyInAnyOrder("Eugene Onegin", "War And Peace");
     }
 
     @Test
     void shouldSaveBook() {
-        Author author1 = new Author();
-        tem.persistAndFlush(author1);
-
-        Genre genre1 = new Genre();
-        tem.persistAndFlush(genre1);
+        Author author = tem.find(Author.class, 1L); // данные из data.sql
+        Genre genre = tem.find(Genre.class, 1L);
 
         Book bookToSave = new Book();
-        bookToSave.setAuthor(author1);
-        bookToSave.setGenre(genre1);
+        bookToSave.setTitle("New unique title"); // Чтобы не было конфликтов
+        bookToSave.setAuthor(author);
+        bookToSave.setGenre(genre);
 
         bookRepository.save(bookToSave);
+
+        tem.flush();
+        tem.clear();
 
         Book foundBook = tem.find(Book.class, bookToSave.getId());
 
@@ -80,20 +62,9 @@ public class JpaBookRepositoryTest {
 
     @Test
     void shouldDeleteBookById() {
-        Author author1 = new Author();
-        tem.persistAndFlush(author1);
+        bookRepository.deleteById(1L);
 
-        Genre genre1 = new Genre();
-        tem.persistAndFlush(genre1);
-
-        Book bookToSave = new Book();
-        bookToSave.setAuthor(author1);
-        bookToSave.setGenre(genre1);
-        tem.persistAndFlush(bookToSave);
-
-        bookRepository.deleteById(bookToSave.getId());
-
-        Book foundBook = tem.find(Book.class, bookToSave.getId());
+        Book foundBook = tem.find(Book.class, 1L);
 
         Assertions.assertThat(foundBook).isNull();
     }

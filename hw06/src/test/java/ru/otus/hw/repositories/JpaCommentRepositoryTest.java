@@ -25,49 +25,22 @@ public class JpaCommentRepositoryTest {
 
     @Test
     void shouldFindById() {
-        Author author1 = new Author();
-        tem.persistAndFlush(author1);
-
-        Genre genre1 = new Genre();
-        tem.persistAndFlush(genre1);
-
-        Book book = new Book();
-        book.setGenre(genre1);
-        book.setAuthor(author1);
-        tem.persistAndFlush(book);
-
-        Comment commentToSave = new Comment();
-        commentToSave.setBook(book);
-        tem.persistAndFlush(commentToSave);
-
-        Comment foundComment = commentRepository.findById(commentToSave.getId()).orElseThrow();
+        Comment foundComment = commentRepository.findById(1L).orElseThrow();
 
         Assertions.assertThat(foundComment)
-                .isNotNull()
-                .isEqualTo(commentToSave);
+                .isNotNull();
+        Assertions.assertThat(foundComment.getText())
+                .isEqualTo("Good book!");
     }
 
     @Test
     void shouldFindByBookId() {
-        Author author1 = new Author();
-        tem.persistAndFlush(author1);
-
-        Genre genre1 = new Genre();
-        tem.persistAndFlush(genre1);
-
-        Book bookToSave = new Book();
-        bookToSave.setAuthor(author1);
-        bookToSave.setGenre(genre1);
-        tem.persistAndFlush(bookToSave);
-
-        Comment commentToSave = new Comment();
-        commentToSave.setBook(bookToSave);
-        tem.persistAndFlush(commentToSave);
-
         List<Comment> foundComments = commentRepository
-                .findAllByBookId(bookToSave.getId());
+                .findAllByBookId(1L);
 
-        Assertions.assertThat(foundComments).contains(commentToSave);
+        Assertions.assertThat(foundComments)
+                .extracting(Comment::getId)
+                .containsExactlyInAnyOrder(1L);
     }
 
     @Test
