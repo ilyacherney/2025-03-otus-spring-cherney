@@ -16,8 +16,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @EntityGraph(value = "book-entity-graph-with-author-genre", type = EntityGraph.EntityGraphType.FETCH)
     List<Book> findAll();
-
-//    Book save(Book book);
-
-//    void deleteById(long id);
 }
