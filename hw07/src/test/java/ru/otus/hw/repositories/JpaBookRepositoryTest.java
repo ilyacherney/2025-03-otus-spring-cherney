@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -13,14 +12,13 @@ import ru.otus.hw.models.Genre;
 import java.util.List;
 
 @DataJpaTest
-@Import(JpaBookRepository.class)
 public class JpaBookRepositoryTest {
 
     @Autowired
     private TestEntityManager tem;
 
     @Autowired
-    private JpaBookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @Test
     void shouldFindById() {

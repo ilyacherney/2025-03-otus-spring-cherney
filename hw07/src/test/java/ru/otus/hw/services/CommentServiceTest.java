@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.repositories.JpaAuthorRepository;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaCommentRepository;
+import ru.otus.hw.repositories.AuthorRepository;
+import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.CommentRepository;
 
 @DataJpaTest
-@Import({CommentServiceImpl.class, JpaCommentRepository.class, JpaBookRepository.class, JpaAuthorRepository.class})
+@Import({CommentServiceImpl.class})
 public class CommentServiceTest {
 
     @Autowired
@@ -19,7 +19,7 @@ public class CommentServiceTest {
 
     @Test
     void shouldNotThrowLIE() {
-        Comment foundComment = commentService.findById(1).orElseThrow();
+        Comment foundComment = commentService.findById(1L).orElseThrow();
 
         Assertions.assertThatCode(() -> {
                     String bookTitle = foundComment.getBook().getTitle();

@@ -5,20 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
-import ru.otus.hw.models.Author;
-import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.models.Genre;
 
 import java.util.List;
 
 @DataJpaTest
-@Import(JpaCommentRepository.class)
 public class JpaCommentRepositoryTest {
 
     @Autowired
-    private JpaCommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
     private TestEntityManager tem;
@@ -47,7 +42,7 @@ public class JpaCommentRepositoryTest {
     void shouldSaveComment() {
         Comment commentToSave = new Comment();
 
-        commentRepository.saveComment(commentToSave);
+        commentRepository.save(commentToSave);
 
         Comment foundComment = tem.find(Comment.class, commentToSave.getId());
         Assertions.assertThat(foundComment)
@@ -60,7 +55,7 @@ public class JpaCommentRepositoryTest {
         Comment commentToDelete = new Comment();
         tem.persistAndFlush(commentToDelete);
 
-        commentRepository.deleteComment(commentToDelete.getId());
+        commentRepository.delete(commentToDelete);
 
         Comment foundComment = tem.find(Comment.class, commentToDelete.getId());
         Assertions.assertThat(foundComment).isNull();

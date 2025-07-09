@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    public Optional<Book> findById(long id) {
+    public Optional<Book> findById(Long id) {
         return bookRepository.findById(id);
     }
 
@@ -35,13 +35,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book insert(String title, long authorId, long genreId) {
+    public Book insert(String title, Long authorId, Long genreId) {
         return save(title, authorId, genreId);
     }
 
     @Transactional
     @Override
-    public Book update(long id, String title, long authorId, long genreId) {
+    public Book update(Long id, String title, Long authorId, Long genreId) {
         Book book = findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
 
@@ -60,11 +60,11 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
 
-    private Book save(String title, long authorId, long genreId) {
+    private Book save(String title, Long authorId, Long genreId) {
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)

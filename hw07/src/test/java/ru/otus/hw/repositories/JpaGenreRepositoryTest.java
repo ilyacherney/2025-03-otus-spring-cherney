@@ -11,11 +11,10 @@ import ru.otus.hw.models.Genre;
 import java.util.List;
 
 @DataJpaTest
-@Import(JpaGenreRepository.class)
 public class JpaGenreRepositoryTest {
 
     @Autowired
-    private JpaGenreRepository genreRepository;
+    private GenreRepository genreRepository;
 
     @Autowired
     private TestEntityManager tem;

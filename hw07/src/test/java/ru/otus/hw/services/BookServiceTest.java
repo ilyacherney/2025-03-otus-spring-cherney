@@ -15,16 +15,15 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.repositories.JpaAuthorRepository;
-import ru.otus.hw.repositories.JpaBookRepository;
-import ru.otus.hw.repositories.JpaGenreRepository;
+import ru.otus.hw.repositories.AuthorRepository;
+import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
 
 @DataJpaTest
 @Transactional(propagation = Propagation.NEVER)
-@Import({BookServiceImpl.class, JpaBookRepository.class, JpaAuthorRepository.class,
-        JpaGenreRepository.class})
+@Import(BookServiceImpl.class)
 public class BookServiceTest {
 
     @Autowired
@@ -49,28 +48,26 @@ public class BookServiceTest {
 
     @Test
     void shouldFindBookById() {
-        Book expectedBook = new Book(1L, "War And Peace",
-                new Author(1, "Leo Tolstoy"),
-                new Genre(1, "Novel")
-        );
+        Book foundBook = bookService.findById(1L).orElseThrow();
 
-        Book foundBook = bookService.findById(1).orElseThrow();
-
-        Assertions.assertThat(foundBook)
-                .usingRecursiveComparison()
-                .isEqualTo(expectedBook);
+        Assertions.assertThat(foundBook.getId()).isEqualTo(1L);
+        Assertions.assertThat(foundBook.getTitle()).isEqualTo("War And Peace");
+        Assertions.assertThat(foundBook.getAuthor().getId()).isEqualTo(1L);
+        Assertions.assertThat(foundBook.getAuthor().getFullName()).isEqualTo("Leo Tolstoy");
+        Assertions.assertThat(foundBook.getGenre().getId()).isEqualTo(1L);
+        Assertions.assertThat(foundBook.getGenre().getName()).isEqualTo("Novel");
     }
 
     @Test
     void ShouldFindAllBooks() {
         List<Book> expectedBooks = List.of(
                 new Book(1L, "War And Peace",
-                new Author(1, "Leo Tolstoy"),
-                new Genre(1, "Novel")
+                new Author(1L, "Leo Tolstoy"),
+                new Genre(1L, "Novel")
         ),
                 new Book(2L, "Eugene Onegin",
-                new Author(2, "Alexander Pushkin"),
-                new Genre(1, "Novel")
+                new Author(2L, "Alexander Pushkin"),
+                new Genre(1L, "Novel")
         ));
 
         List<Book> foundBooks = bookService.findAll();
