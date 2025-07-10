@@ -53,7 +53,7 @@ public class LocalizedIOServiceImpl implements LocalizedIOService {
 
     @Override
     public String readStringWithPromptLocalized(String promptCode) {
-        return ioService.readStringWithPrompt(localizedMessagesService.getMessage(promptCode));
+       return ioService.readStringWithPrompt(localizedMessagesService.getMessage(promptCode));
     }
 
     @Override
