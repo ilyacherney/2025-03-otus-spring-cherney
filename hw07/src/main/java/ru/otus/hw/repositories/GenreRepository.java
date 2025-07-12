@@ -8,8 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GenreRepository extends JpaRepository<Genre, Long> {
-    List<Genre> findAll();
-
-    Optional<Genre> findById(long id);
-}
+public interface GenreRepository extends JpaRepository<Genre, Long> {}
