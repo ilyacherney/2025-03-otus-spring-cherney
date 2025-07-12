@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
+import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
@@ -19,23 +20,17 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public TestResult executeTestFor(Student student) {
-        ioService.printLine("");
-        ioService.printLineLocalized("TestService.answer.the.questions");
-        ioService.printLine("");
+        printStartingMessage();
 
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
         for (var question: questions) {
             var isAnswerValid = false;
-            List<Answer> answers = question.answers();
 
-            ioService.printLine(question.text());
-            for (int i = 0; i < answers.size(); i++) {
-                ioService.printLine((i + 1) + ". " + answers.get(i).text());
-            }
+            printQuestionWithAnswers(question);
 
-            int chosenAnswer = ioService.readIntForRange(1, answers.size(),
+            int chosenAnswer = ioService.readIntForRange(1, question.answers().size(),
                     ioService.getMessage("TestService.no.such.answer"));
 
             if (chosenAnswer == 0) {
@@ -46,6 +41,21 @@ public class TestServiceImpl implements TestService {
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
+    }
+
+    private void printStartingMessage() {
+        ioService.printLine("");
+        ioService.printLineLocalized("TestService.answer.the.questions");
+        ioService.printLine("");
+    }
+
+    private void printQuestionWithAnswers(Question question) {
+        List<Answer> answers = question.answers();
+
+        ioService.printLine(question.text());
+        for (int i = 0; i < answers.size(); i++) {
+            ioService.printLine((i + 1) + ". " + answers.get(i).text());
+        }
     }
 
 }
