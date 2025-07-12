@@ -9,8 +9,9 @@ import java.util.Scanner;
 
 @Service
 public class StreamsIOService implements IOService {
-    // todo: перенести в properties
-    private static final int MAX_ATTEMPTS = 10;
+
+    @Value("${ioService.maxAttempts}")
+    private int maxAttempts;
 
     private final PrintStream printStream;
 
@@ -46,7 +47,7 @@ public class StreamsIOService implements IOService {
 
     @Override
     public int readIntForRange(int min, int max, String errorMessage) {
-        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+        for (int i = 0; i < maxAttempts; i++) {
             try {
                 var stringValue = scanner.nextLine();
                 int intValue = Integer.parseInt(stringValue);

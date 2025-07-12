@@ -11,3 +11,5 @@ test:
   fileNameByLocaleTag:
     ru-RU: questions_ru.csv
     en-US: questions.csv
+ioService:
+  maxAttempts: 10

@@ -36,7 +36,7 @@ public class TestServiceImpl implements TestService {
             }
             //todo перевести
             int chosenAnswer = ioService.readIntForRange(1, answers.size(),
-                    "No answer with entered number exists");
+                    ioService.readStringWithPromptLocalized("TestService.no.such.answer"));
 
             if (chosenAnswer == 0) {
                 isAnswerValid = false;
