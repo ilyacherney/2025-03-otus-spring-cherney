@@ -34,9 +34,9 @@ public class TestServiceImpl implements TestService {
             for (int i = 0; i < answers.size(); i++) {
                 ioService.printLine((i + 1) + ". " + answers.get(i).text());
             }
-            //todo перевести
+
             int chosenAnswer = ioService.readIntForRange(1, answers.size(),
-                    ioService.readStringWithPromptLocalized("TestService.no.such.answer"));
+                    ioService.getMessage("TestService.no.such.answer"));
 
             if (chosenAnswer == 0) {
                 isAnswerValid = false;
