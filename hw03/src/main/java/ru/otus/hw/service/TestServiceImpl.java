@@ -33,11 +33,7 @@ public class TestServiceImpl implements TestService {
             int chosenAnswer = ioService.readIntForRange(1, question.answers().size(),
                     ioService.getMessage("TestService.no.such.answer"));
 
-            if (chosenAnswer == 0) {
-                isAnswerValid = false;
-            } else {
-                isAnswerValid = question.answers().get(chosenAnswer - 1).isCorrect();
-            }
+            isAnswerValid = question.answers().get(chosenAnswer - 1).isCorrect();
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
