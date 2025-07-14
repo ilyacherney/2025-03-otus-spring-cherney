@@ -1,7 +1,0 @@
-ru\otus\hw\services\BookServiceTest.class
-ru\otus\hw\repositories\JpaGenreRepositoryTest.class
-ru\otus\hw\repositories\JpaBookRepositoryTest.class
-ru\otus\hw\services\CommentServiceTest.class
-ru\otus\hw\models\ModelsCommonTest.class
-ru\otus\hw\repositories\JpaAuthorRepositoryTest.class
-ru\otus\hw\repositories\JpaCommentRepositoryTest.class
