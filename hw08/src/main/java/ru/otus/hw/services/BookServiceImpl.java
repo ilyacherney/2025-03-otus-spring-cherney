@@ -1,15 +1,15 @@
 package ru.otus.hw.services;
 
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.models.Genre;
+//import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
-import ru.otus.hw.repositories.GenreRepository;
+//import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +20,12 @@ public class BookServiceImpl implements BookService {
 
     private final AuthorRepository authorRepository;
 
-    private final GenreRepository genreRepository;
+//    private final GenreRepository genreRepository;
 
     private final BookRepository bookRepository;
 
     @Override
-    public Optional<Book> findById(Long id) {
+    public Optional<Book> findById(long id) {
         return bookRepository.findById(id);
     }
 
@@ -34,23 +34,14 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll();
     }
 
-    @Transactional
     @Override
-    public Book insert(String title, Long authorId, Long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book();
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setGenre(genre);
-        return bookRepository.save(book);
+    public Book insert(String title, long authorId, long genreId) {
+        return save(title, authorId, genreId);
     }
 
-    @Transactional
+//    @Transactional
     @Override
-    public Book update(Long id, String title, Long authorId, Long genreId) {
+    public Book update(long id, String title, long authorId, long genreId) {
         Book book = findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
 
@@ -60,16 +51,28 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         book.setAuthor(author);
 
-        Genre genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        book.setGenre(genre);
+//        Genre genre = genreRepository.findById(genreId)
+//                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+//        book.setGenre(genre);
 
         return bookRepository.save(book);
     }
 
-    @Transactional
-    @Override
-    public void deleteById(Long id) {
-        bookRepository.deleteById(id);
+//    @Transactional
+//    @Override
+//    public void deleteById(long id) {
+//        bookRepository.deleteById(id);
+//    }
+//
+    private Book save(String title, long authorId, long genreId) {
+        var author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+//        var genre = genreRepository.findById(genreId)
+//                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+        var book = new Book();
+        book.setTitle(title);
+        book.setAuthor(author);
+//        book.setGenre(genre);
+        return bookRepository.save(book);
     }
 }
