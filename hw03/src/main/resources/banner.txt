@@ -1,0 +1,10 @@
+${AnsiColor.MAGENTA}
+${AnsiBackground.BRIGHT_CYAN}
+${AnsiBackground.BLACK}    ______  _____    _   __   __________  _____ __    _____   ________
+${AnsiBackground.BLACK}   / __ \ \/ /   |  / | / /  / ____/ __ \/ ___// /   /  _/ | / / ____/
+${AnsiBackground.BLACK}  / /_/ /\  / /| | /  |/ /  / / __/ / / /\__ \/ /    / //  |/ / / __
+${AnsiBackground.BLACK} / _, _/ / / ___ |/ /|  /  / /_/ / /_/ /___/ / /____/ // /|  / /_/ /
+${AnsiBackground.BLACK}/_/ |_| /_/_/  |_/_/ |_/   \____/\____//____/_____/___/_/ |_/\____/
+${AnsiBackground.BLACK}
+${AnsiBackground.BRIGHT_CYAN}
+${AnsiBackground.DEFAULT}
