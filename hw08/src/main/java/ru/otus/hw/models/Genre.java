@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -18,12 +17,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 //@Entity
-@Document
-//@Table(name = "authors")
-public class Author {
-    @Id
+@Document(collection = "genre")
+//@Table(name = "genres")
+public class Genre {
+
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private String id;
 
-    private String fullName;
+    private String name;
 }

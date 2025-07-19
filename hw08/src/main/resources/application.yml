@@ -1,7 +1,9 @@
 spring:
   data:
     mongodb:
-      uri=mongodb://localhost:27017/mydb:
+      uri: mongodb://localhost:27017/mydb
+
+
 #  datasource:
 #    url: jdbc:h2:mem:maindb
 #  sql:
