@@ -1,14 +1,5 @@
 package ru.otus.hw.models;
 
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.FetchType;
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
-//import jakarta.persistence.Id;
-//import jakarta.persistence.ManyToOne;
-//import jakarta.persistence.NamedAttributeNode;
-//import jakarta.persistence.NamedEntityGraph;
-//import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,11 +19,10 @@ import java.util.UUID;
 @Document
 @Getter
 @Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
 
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private String id;
 
@@ -50,21 +40,4 @@ public class Book {
         this.author = author;
         this.genre = genre;
     }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) {
-//            return true;
-//        }
-//        if (!(o instanceof Book)) {
-//            return false;
-//        }
-//        Book book = (Book) o;
-//        return id != 0 && id == book.id;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Long.hashCode(id);
-//    }
 }

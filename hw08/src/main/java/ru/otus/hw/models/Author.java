@@ -1,29 +1,27 @@
 package ru.otus.hw.models;
 
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
-//import jakarta.persistence.Id;
-//import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.UUID;
 
 @Getter
 @Setter
+@Document
 @AllArgsConstructor
 @NoArgsConstructor
-//@Entity
-@Document
-//@Table(name = "authors")
 public class Author {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private String fullName;
+
+    public Author(String fullName) {
+        this.id = UUID.randomUUID().toString();
+        this.fullName = fullName;
+    }
 }

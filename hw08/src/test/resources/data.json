@@ -1,0 +1,54 @@
+[
+  {
+    "_id": "1",
+    "_class": "ru.otus.hw.models.Author",
+    "fullName": "Leo Tolstoy"
+  },
+  {
+    "_id": "2",
+    "_class": "ru.otus.hw.models.Author",
+    "fullName": "Alexander Pushkin"
+  },
+  {
+    "_id": "1",
+    "_class": "ru.otus.hw.models.Genre",
+    "name": "Novel"
+  },
+  {
+    "_id": "2",
+    "_class": "ru.otus.hw.models.Genre",
+    "name": "Fairytale"
+  },
+  {
+    "_id": "1",
+    "_class": "ru.otus.hw.models.Book",
+    "title": "War And Peace",
+    "author": {
+      "id": "1",
+      "fullName": "Leo Tolstoy"
+    },
+    "genre": {
+      "id": "1",
+      "name": "Novel"
+    }
+  },
+  {
+    "_id": "2",
+    "_class": "ru.otus.hw.models.Book",
+    "title": "Eugene Onegin",
+    "author": {
+      "id": "2",
+      "fullName": "Alexander Pushkin"
+    },
+    "genre": {
+      "id": "1",
+      "name": "Novel"
+    }
+  },
+  {
+    "_id": "1",
+    "_class": "ru.otus.hw.models.Comment",
+    "bookId": "1",
+    "text": "Good book!"
+  }
+]
