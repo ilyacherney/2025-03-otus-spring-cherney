@@ -9,13 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
-//@NamedEntityGraph(
-//        name = "book-entity-graph-with-author-genre",
-//        attributeNodes = {
-//                @NamedAttributeNode("author"),
-//                @NamedAttributeNode("genre")})
-//@Entity
-//@Table(name = "books")
 @Document
 @Getter
 @Setter
@@ -28,10 +21,8 @@ public class Book {
 
     private String title;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
+
     private Genre genre;
 
     public Book(String title, Author author, Genre genre) {

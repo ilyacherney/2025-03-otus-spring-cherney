@@ -20,14 +20,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comment {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
     private Book book;
 
     public Comment(String text, Book book) {

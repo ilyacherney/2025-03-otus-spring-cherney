@@ -1,6 +1,5 @@
 package ru.otus.hw.services;
 
-//import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -31,7 +30,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-//    @Transactional
     public Comment insertComment(String text, String bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id " + bookId + " not found"));
@@ -40,7 +38,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-//    @Transactional
     public void deleteComment(String id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
@@ -48,7 +45,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-//    @Transactional
     public Comment updateComment(String commentId, String text) {
         Comment comment = findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id " + commentId + " not found"));
